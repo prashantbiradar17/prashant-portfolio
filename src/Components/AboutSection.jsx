@@ -30,7 +30,8 @@ export const AboutSection = () => {
           <div className="flex justify-center md:justify-center">
             <div className="grid grid-cols-1" >
               <img
-                src="./public/projects/aboutphoto3.png"
+                src="https://media.licdn.com/dms/image/v2/D4E03AQFT6-MWTbChng/profile-displayphoto-scale_200_200/B4EZpdQ3oJGYAc-/0/1762501299646?e=1764201600&v=beta&t=2B1e-Udmz8qt4YGSlLK0pIo_ulNiQBmqF5pt8H-u5jc"
+                
                 className="w-80 h-80 md:w-80 md:h-80 rounded-full object-cover"
               />
               <p className="text-4xl md:text-5xl font-bold mb-12 text-center">Prashant Biradar</p>
