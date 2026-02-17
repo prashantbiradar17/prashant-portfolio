@@ -78,7 +78,7 @@ const qaDatabase = {
     'hi': 'Hi there! 😊 What would you like to know about me?',
     'hey': 'Hey! How can I help you today?',
     'i love u':'I love YOU Too ❤️',
-    'fuck you':'chal bhosdike',
+    'fuck you':"Let's keep things respectful 😄 Ask me about my projects, skills, or experience.",
     'certificates':'Machine Learning in Python: freeCodeCamp\nDSA: GeeksforGeeks\n AI Fundamentals:IBM',
     'tell me about yourself':'I’m Prashant, a final-year B.Tech student in Computer Science with a specialization in AI & ML. I enjoy solving problems through code and building web-based applications. I’ve worked on projects like a university website and a house price prediction app. My goal is to grow as a full-stack or AI developer in a reputed MNC where I can apply both creative and analytical thinking.',
     'What are your strengths and weaknesses':'My strengths are problem-solving, adaptability, and persistence in debugging. My weakness is that I sometimes focus too much on perfecting small details, but I’m learning to balance efficiency with accuracy.',
@@ -220,12 +220,12 @@ const qaDatabase = {
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
-      <h2 className="text-3xl font-bold text-center mb-6 text-green-500 font-mono">
+      <h2 className="text-3xl font-bold text-center mb-6 text-primary font-mono">
         $ Ask Me Anything
       </h2>
       
       <div 
-        className="bg-gray-900 rounded-lg shadow-2xl overflow-hidden border border-gray-700"
+        className="bg-card/90 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden border border-border"
         onClick={() => inputRef.current?.focus()}
       >
         {/* Terminal Header */}
