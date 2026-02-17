@@ -17,6 +17,7 @@ const AskMe = () => {
       type: "assistant",
       content:
         "Ready. Ask commands like `education`, `courses`, `certificates`, `degree`, `height`, `rating`, `skills`, `projects`, or any natural question.",
+        "Hi! I can answer in real time about my education, courses, certificates, degree, height, rating, skills, projects, and more.",
     },
   ]);
   const [inputValue, setInputValue] = useState("");
@@ -33,11 +34,15 @@ const AskMe = () => {
       return "Commands: education, courses, certificates, degree, height, rating, skills, location, hometown, college, name.";
     }
 
+  const getFallbackAnswer = (question) => {
+    const q = question.toLowerCase().trim();
+
     for (const [key, value] of Object.entries(askMeFallbackMap)) {
       if (q.includes(key)) return value;
     }
 
     return "Unknown command. Try: help";
+    return "I can answer personal questions about my education, courses, certificates, degree, height, rating, skills, and projects. Ask me anything!";
   };
 
   const getAnswerFromLLM = async (question, history) => {
@@ -110,6 +115,9 @@ const AskMe = () => {
     <div className="w-full max-w-5xl mx-auto p-4">
       <h2 className="text-3xl font-bold text-center mb-2 text-primary font-mono">$ Ask Me Anything</h2>
       <p className="text-center text-sm text-foreground/70 mb-6">Command-line mode enabled.</p>
+      <p className="text-center text-sm text-foreground/70 mb-6">
+        Windows terminal style • live AI replies when <code>VITE_OPENAI_API_KEY</code> is set.
+      </p>
 
       <div
         className="rounded-2xl overflow-hidden border border-[#2f3241] shadow-[0_18px_40px_rgba(0,0,0,0.45)] bg-[#0d1117]"
@@ -152,6 +160,24 @@ const AskMe = () => {
               <span className="text-[#93c5fd] animate-pulse ml-2">running ai_query...</span>
             </div>
           )}
+        <div
+          ref={terminalBodyRef}
+          className="p-6 min-h-[390px] max-h-[520px] overflow-y-auto font-mono text-sm space-y-4 bg-[#0d1117]"
+        >
+          {messages.map((line, index) => (
+            <div key={`${line.type}-${index}`}>
+              {line.type === "user" ? (
+                <div>
+                  <span className="text-[#7dd3fc] font-bold">PS C:\\Visitor\\Portfolio&gt;</span>
+                  <span className="text-[#4ade80] ml-2">{line.content}</span>
+                </div>
+              ) : (
+                <div className="text-[#d1d5db] leading-relaxed whitespace-pre-wrap">{line.content}</div>
+              )}
+            </div>
+          ))}
+
+          {isLoading && <div className="text-[#93c5fd] animate-pulse">Thinking...</div>}
         </div>
 
         <div className="border-t border-[#2f3241] p-4 bg-[#0a0f16]">
@@ -165,6 +191,7 @@ const AskMe = () => {
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               className="flex-1 bg-transparent border-none outline-none text-[#4ade80] font-mono text-sm placeholder:text-[#6b7280]"
               placeholder="Type a command (help)"
+              placeholder="Ask anything about me..."
               autoComplete="off"
             />
             <button
@@ -173,6 +200,7 @@ const AskMe = () => {
               className="px-4 py-1.5 rounded-md bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-xs font-medium transition-colors disabled:opacity-50"
             >
               Run
+              Send
             </button>
           </div>
         </div>
