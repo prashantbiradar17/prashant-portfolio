@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
@@ -8,16 +7,18 @@ export default function App() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // run once per browser session to avoid fighting user navigation
-    if (sessionStorage.getItem("initialHashHandled")) return;
-    sessionStorage.setItem("initialHashHandled", "1");
+    // Force first paint to hero section instead of restoring last scroll position/hash.
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
 
-    if (window.location.hash === "#askme") {
-      // replace fragment without reload and scroll to hero
-      history.replaceState(null, "", "#hero");
-      setTimeout(() => {
-        document.getElementById("hero")?.scrollIntoView({ behavior: "auto" });
-      }, 50);
+    if (window.location.pathname === "/") {
+      window.history.replaceState(null, "", "#hero");
+
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        document.getElementById("hero")?.scrollIntoView({ behavior: "auto", block: "start" });
+      });
     }
   }, []);
 
