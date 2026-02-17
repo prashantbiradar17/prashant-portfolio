@@ -1,54 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-
-const profile = {
-  name: "Prashant Biradar",
-  role: "Full-Stack Developer & Machine Learning Enthusiast",
-  location: "Hyderabad, Telangana, India",
-  hometown: "Gulbarga, Karnataka, India",
-  education: "B.Tech in Computer Science (AI & ML), expected graduation in 2026",
-  degree: "Bachelor of Technology (B.Tech)",
-  college: "Swami Vivekananda Institute of Technology, Secunderabad",
-  courses: [
-    "Full Stack Web Development",
-    "Machine Learning Specialization",
-    "Node.js & Express.js",
-    "Data Science with Python",
-  ],
-  certificates: [
-    "Machine Learning in Python (freeCodeCamp)",
-    "DSA (GeeksforGeeks)",
-    "AI Fundamentals (IBM)",
-  ],
-  height: "5'9\" (approx)",
-  rating: "4.6/5 for problem-solving and project execution",
-  skills: [
-    "React",
-    "JavaScript",
-    "Node.js",
-    "Express",
-    "MongoDB",
-    "Python",
-    "Machine Learning",
-  ],
-};
+import {
+  askMeFallbackMap,
+  buildAskMeSystemPrompt,
+} from "@/lib/askmeProfile";
 
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 const OPENAI_MODEL = import.meta.env.VITE_OPENAI_MODEL || "gpt-4o-mini";
 const OPENAI_BASE_URL = import.meta.env.VITE_OPENAI_BASE_URL || "https://api.openai.com/v1";
-
-const fallbackMap = {
-  name: `My name is ${profile.name}.`,
-  location: `I am based in ${profile.location}.`,
-  hometown: `I am from ${profile.hometown}.`,
-  education: `I am pursuing ${profile.education}.`,
-  degree: `My degree is ${profile.degree}.`,
-  college: `I study at ${profile.college}.`,
-  courses: `I have completed courses in: ${profile.courses.join(", ")}.`,
-  certificates: `My certificates include: ${profile.certificates.join(", ")}.`,
-  skills: `My core skills are: ${profile.skills.join(", ")}.`,
-  height: `My height is ${profile.height}.`,
-  rating: `My self-rating is ${profile.rating}.`,
-};
 
 const AskMe = () => {
   const [messages, setMessages] = useState([
@@ -63,34 +21,12 @@ const AskMe = () => {
   const terminalBodyRef = useRef(null);
   const inputRef = useRef(null);
 
-  const systemPrompt = useMemo(
-    () => `
-You are an AI assistant representing ${profile.name}.
-Answer in first person as Prashant.
-Keep answers concise, clear, and friendly.
-If a personal detail is unknown, say you do not want to guess.
-
-Profile:
-- Name: ${profile.name}
-- Role: ${profile.role}
-- Location: ${profile.location}
-- Hometown: ${profile.hometown}
-- Education: ${profile.education}
-- Degree: ${profile.degree}
-- College: ${profile.college}
-- Courses: ${profile.courses.join(", ")}
-- Certificates: ${profile.certificates.join(", ")}
-- Height: ${profile.height}
-- Rating: ${profile.rating}
-- Skills: ${profile.skills.join(", ")}
-`,
-    []
-  );
+  const systemPrompt = useMemo(() => buildAskMeSystemPrompt(), []);
 
   const getFallbackAnswer = (question) => {
     const q = question.toLowerCase().trim();
 
-    for (const [key, value] of Object.entries(fallbackMap)) {
+    for (const [key, value] of Object.entries(askMeFallbackMap)) {
       if (q.includes(key)) return value;
     }
 
@@ -165,7 +101,9 @@ Profile:
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
-      <h2 className="text-3xl font-bold text-center mb-3 text-primary font-mono">$ Ask Me Anything</h2>
+      <h2 className="text-3xl font-bold text-center mb-3 text-primary font-mono">
+        $ Ask Me Anything
+      </h2>
       <p className="text-center text-sm text-foreground/70 mb-6">
         Real-time AI mode is enabled when <code>VITE_OPENAI_API_KEY</code> is configured.
       </p>
