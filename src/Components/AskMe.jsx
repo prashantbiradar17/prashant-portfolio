@@ -116,6 +116,21 @@ const AskMe = () => {
   }, []);
 
   return (
+    <div className="w-full max-w-5xl mx-auto p-4">
+      <h2 className="text-3xl font-bold text-center mb-2 text-primary font-mono">$ Ask Me Anything</h2>
+      <p className="text-center text-sm text-foreground/70 mb-6">Command-line mode enabled.</p>
+
+      <div
+        className="rounded-2xl overflow-hidden border border-[#2f3241] shadow-[0_18px_40px_rgba(0,0,0,0.45)] bg-[#0d1117]"
+        onClick={() => inputRef.current?.focus()}
+      >
+        <div className="bg-[#1b2233] px-4 py-3 flex items-center gap-2 border-b border-[#2f3241]">
+          <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+          <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
+          <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+          <div className="ml-auto text-[#9ca3af] text-sm font-mono">C:\Users\Prashant\portfolio-ai-terminal</div>
+        </div>
+
     <div className="w-full max-w-4xl mx-auto p-4">
       <h2 className="text-3xl font-bold text-center mb-3 text-primary font-mono">
         $ Ask Me Anything
@@ -186,6 +201,33 @@ const AskMe = () => {
               <span className="text-[#93c5fd] animate-pulse ml-2">running ai_query...</span>
             </div>
           )}
+        </div>
+
+          </div>
+
+          <div className="space-y-4">
+            {messages.map((line, index) => (
+              <div key={`${line.type}-${index}`}>
+                {line.type === "user" ? (
+                  <div>
+                    <span className="text-[#7dd3fc] font-bold">PS C:\\Visitor\\Portfolio&gt;</span>
+                    <span className="text-[#4ade80] ml-2">{line.content}</span>
+                  </div>
+                ) : (
+                  <div className="pl-1 border-l-2 border-[#334155] ml-[2px] mt-1">
+                    <pre className="text-[#d1d5db] leading-relaxed whitespace-pre-wrap font-mono">{line.content}</pre>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {isLoading && (
+            <div className="mt-4">
+              <span className="text-[#7dd3fc] font-bold">PS C:\\Visitor\\Portfolio&gt;</span>
+              <span className="text-[#93c5fd] animate-pulse ml-2">running ai_query...</span>
+            </div>
+          )}
         <div
           ref={terminalBodyRef}
           className="p-6 min-h-[390px] max-h-[520px] overflow-y-auto font-mono text-sm space-y-4 bg-[#0d1117]"
@@ -226,6 +268,8 @@ const AskMe = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              className="flex-1 bg-transparent border-none outline-none text-[#4ade80] font-mono text-sm placeholder:text-[#6b7280]"
+              placeholder="Type a command (help)"
               className="flex-1 bg-transparent border-none outline-none text-green-400 font-mono text-sm placeholder-gray-600"
               className="flex-1 bg-transparent border-none outline-none text-[#4ade80] font-mono text-sm placeholder:text-[#6b7280]"
               placeholder="Type a command (help)"
@@ -235,6 +279,9 @@ const AskMe = () => {
             <button
               onClick={handleSend}
               disabled={isLoading}
+              className="px-4 py-1.5 rounded-md bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-xs font-medium transition-colors disabled:opacity-50"
+            >
+              Run
               className="px-3 py-1 rounded-md bg-primary text-primary-foreground text-xs disabled:opacity-50"
             >
               className="px-4 py-1.5 rounded-md bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-xs font-medium transition-colors disabled:opacity-50"
