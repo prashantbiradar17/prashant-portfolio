@@ -1,11 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
-const developerProfile = {
+const profile = {
   name: "Prashant Biradar",
   role: "Full-Stack Developer & Machine Learning Enthusiast",
   location: "Hyderabad, Telangana, India",
+  hometown: "Gulbarga, Karnataka, India",
   education: "B.Tech in Computer Science (AI & ML), expected graduation in 2026",
   degree: "Bachelor of Technology (B.Tech)",
+  college: "Swami Vivekananda Institute of Technology, Secunderabad",
   courses: [
     "Full Stack Web Development",
     "Machine Learning Specialization",
@@ -18,48 +20,42 @@ const developerProfile = {
     "AI Fundamentals (IBM)",
   ],
   height: "5'9\" (approx)",
-  rating: "4.6/5 for problem solving and project execution",
+  rating: "4.6/5 for problem-solving and project execution",
+  skills: [
+    "React",
+    "JavaScript",
+    "Node.js",
+    "Express",
+    "MongoDB",
+    "Python",
+    "Machine Learning",
+  ],
 };
-
-const fallbackAnswers = {
-  education: `I am pursuing ${developerProfile.education}.`,
-  degree: `My degree is ${developerProfile.degree}.`,
-  courses: `I have completed courses in: ${developerProfile.courses.join(", ")}.`,
-  certificates: `My certificates include: ${developerProfile.certificates.join(", ")}.`,
-  height: `My height is ${developerProfile.height}.`,
-  rating: `My self-rating is ${developerProfile.rating}.`,
-  location: `I am based in ${developerProfile.location}.`,
-  name: `My name is ${developerProfile.name}.`,
-};
-
-const SYSTEM_PROMPT = `
-You are an AI assistant representing ${developerProfile.name}.
-Reply in first person as Prashant.
-Keep answers clear, friendly, and concise.
-If asked about unknown personal facts, say you don't want to guess.
-
-Profile:
-- Name: ${developerProfile.name}
-- Role: ${developerProfile.role}
-- Location: ${developerProfile.location}
-- Education: ${developerProfile.education}
-- Degree: ${developerProfile.degree}
-- Courses: ${developerProfile.courses.join(", ")}
-- Certificates: ${developerProfile.certificates.join(", ")}
-- Height: ${developerProfile.height}
-- Rating: ${developerProfile.rating}
-`;
 
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 const OPENAI_MODEL = import.meta.env.VITE_OPENAI_MODEL || "gpt-4o-mini";
 const OPENAI_BASE_URL = import.meta.env.VITE_OPENAI_BASE_URL || "https://api.openai.com/v1";
+
+const fallbackMap = {
+  name: `My name is ${profile.name}.`,
+  location: `I am based in ${profile.location}.`,
+  hometown: `I am from ${profile.hometown}.`,
+  education: `I am pursuing ${profile.education}.`,
+  degree: `My degree is ${profile.degree}.`,
+  college: `I study at ${profile.college}.`,
+  courses: `I have completed courses in: ${profile.courses.join(", ")}.`,
+  certificates: `My certificates include: ${profile.certificates.join(", ")}.`,
+  skills: `My core skills are: ${profile.skills.join(", ")}.`,
+  height: `My height is ${profile.height}.`,
+  rating: `My self-rating is ${profile.rating}.`,
+};
 
 const AskMe = () => {
   const [messages, setMessages] = useState([
     {
       type: "assistant",
       content:
-        "Hi! Ask me anything about my education, courses, certificates, degree, height, rating, skills, or projects.",
+        "Hi! I can answer in real time about my education, courses, certificates, degree, height, rating, skills, projects, and more.",
     },
   ]);
   const [inputValue, setInputValue] = useState("");
@@ -67,17 +63,41 @@ const AskMe = () => {
   const terminalBodyRef = useRef(null);
   const inputRef = useRef(null);
 
-  const getFallbackAnswer = (question) => {
-    const q = question.toLowerCase();
+  const systemPrompt = useMemo(
+    () => `
+You are an AI assistant representing ${profile.name}.
+Answer in first person as Prashant.
+Keep answers concise, clear, and friendly.
+If a personal detail is unknown, say you do not want to guess.
 
-    for (const [key, answer] of Object.entries(fallbackAnswers)) {
-      if (q.includes(key)) return answer;
+Profile:
+- Name: ${profile.name}
+- Role: ${profile.role}
+- Location: ${profile.location}
+- Hometown: ${profile.hometown}
+- Education: ${profile.education}
+- Degree: ${profile.degree}
+- College: ${profile.college}
+- Courses: ${profile.courses.join(", ")}
+- Certificates: ${profile.certificates.join(", ")}
+- Height: ${profile.height}
+- Rating: ${profile.rating}
+- Skills: ${profile.skills.join(", ")}
+`,
+    []
+  );
+
+  const getFallbackAnswer = (question) => {
+    const q = question.toLowerCase().trim();
+
+    for (const [key, value] of Object.entries(fallbackMap)) {
+      if (q.includes(key)) return value;
     }
 
-    return "I can answer personal portfolio questions in real-time. Ask me about education, courses, certificates, degree, height, rating, projects, or skills.";
+    return "I can answer personal questions about my education, courses, certificates, degree, height, rating, skills, and projects. Ask me anything!";
   };
 
-  const getAnswerFromLLM = async (question) => {
+  const getAnswerFromLLM = async (question, history) => {
     if (!OPENAI_API_KEY) return null;
 
     try {
@@ -90,23 +110,23 @@ const AskMe = () => {
         body: JSON.stringify({
           model: OPENAI_MODEL,
           messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            ...messages.map((m) => ({
+            { role: "system", content: systemPrompt },
+            ...history.map((m) => ({
               role: m.type === "user" ? "user" : "assistant",
               content: m.content,
             })),
             { role: "user", content: question },
           ],
-          max_tokens: 220,
-          temperature: 0.5,
+          temperature: 0.4,
+          max_tokens: 240,
         }),
       });
 
-      if (!response.ok) throw new Error("API request failed");
+      if (!response.ok) throw new Error("Failed LLM request");
       const data = await response.json();
       return data.choices?.[0]?.message?.content?.trim() || null;
     } catch (error) {
-      console.error("LLM API Error:", error);
+      console.error("AskMe LLM error:", error);
       return null;
     }
   };
@@ -121,15 +141,15 @@ const AskMe = () => {
       return;
     }
 
-    const nextMessages = [...messages, { type: "user", content: question }];
-    setMessages(nextMessages);
+    const nextHistory = [...messages, { type: "user", content: question }];
+    setMessages(nextHistory);
     setInputValue("");
     setIsLoading(true);
 
-    const llmAnswer = await getAnswerFromLLM(question);
+    const llmAnswer = await getAnswerFromLLM(question, nextHistory);
     const answer = llmAnswer || getFallbackAnswer(question);
 
-    setMessages([...nextMessages, { type: "assistant", content: answer }]);
+    setMessages([...nextHistory, { type: "assistant", content: answer }]);
     setIsLoading(false);
   };
 
@@ -145,9 +165,7 @@ const AskMe = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
-      <h2 className="text-3xl font-bold text-center mb-3 text-primary font-mono">
-        $ Ask Me Anything
-      </h2>
+      <h2 className="text-3xl font-bold text-center mb-3 text-primary font-mono">$ Ask Me Anything</h2>
       <p className="text-center text-sm text-foreground/70 mb-6">
         Real-time AI mode is enabled when <code>VITE_OPENAI_API_KEY</code> is configured.
       </p>
@@ -168,7 +186,7 @@ const AskMe = () => {
           className="p-6 min-h-[360px] max-h-[500px] overflow-y-auto font-mono text-sm space-y-3"
         >
           {messages.map((line, index) => (
-            <div key={index}>
+            <div key={`${line.type}-${index}`}>
               {line.type === "user" ? (
                 <div>
                   <span className="text-purple-400 font-bold">visitor@portfolio:~$</span>
