@@ -1,10 +1,7 @@
-// Footer.jsx
-// ...
-export const Footer = () => { // Changed from const Footer = () => { or export default Footer;
+export const Footer = () => {
   return (
-    <footer>
-      <p className="capitalize mb-4">&copy; {new Date().getFullYear()}  all rights are reserved</p>
+    <footer className="py-8 text-center text-sm text-foreground/70 border-t border-border/40">
+      <p>&copy; {new Date().getFullYear()} Prashant Biradar. All rights reserved.</p>
     </footer>
   );
 };
-// ...
