@@ -147,6 +147,15 @@ const AskMe = () => {
           <div className="ml-auto text-[#9ca3af] text-sm font-mono">C:\Users\Prashant\portfolio-ai-terminal</div>
         </div>
 
+        onClick={() => inputRef.current?.focus()}
+      >
+        <div className="bg-[#1b2233] px-4 py-3 flex items-center gap-2 border-b border-[#2f3241]">
+          <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+          <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
+          <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+          <div className="ml-auto text-[#9ca3af] text-sm font-mono">C:\Users\Prashant\portfolio-ai-terminal</div>
+        </div>
+
     <div className="w-full max-w-4xl mx-auto p-4">
       <h2 className="text-3xl font-bold text-center mb-3 text-primary font-mono">
         $ Ask Me Anything
@@ -192,6 +201,8 @@ const AskMe = () => {
             {bootLines.map((line) => (
               <p key={line}>{line}</p>
             ))}
+          </div>
+
           </div>
 
           <div className="space-y-4">
