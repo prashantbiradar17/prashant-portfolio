@@ -105,7 +105,7 @@ export const ContactSection = () => {
                   <Twitter />
                 </a>
                 <a
-                  href="https://www.instagram.com/prashaant_2004/"
+                  href="https://www.instagram.com/prashaant.mp3/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

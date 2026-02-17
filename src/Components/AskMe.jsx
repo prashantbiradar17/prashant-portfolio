@@ -53,7 +53,7 @@ const AskMe = () => {
     }
 
     return "Unknown command. Try: help";
-    return "I can answer personal questions about my education, courses, certificates, degree, height, rating, skills, and projects. Ask me anything!";
+    return "I can answer personal questions about my education, courses, certificates, degree,  rating, skills, and projects. Ask me anything!";
   };
 
   const getAnswerFromLLM = async (question, history) => {
