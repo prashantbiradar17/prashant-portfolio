@@ -15,23 +15,28 @@ export const HeroSection = () => {
         </p>
 
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-          Hi, I'm <span className="text-primary text-glow">Prashant Biradar</span>
+          Hi, I'm{" "}
+          <span className="text-primary text-glow">Prashant Biradar</span>
         </h1>
 
         <p className="text-lg md:text-xl max-w-3xl mx-auto text-foreground/80 leading-relaxed mb-10">
-          Full-stack developer crafting fast, beautiful web products with a focus on
-          clean UI, smooth animations, and great user experience across devices.
+          Full-stack developer crafting fast, beautiful web products with a
+          focus on clean UI, smooth animations, and great user experience across
+          devices.
         </p>
 
         <div className="flex flex-wrap justify-center gap-4">
-          <a href="#projects" className="inline-flex items-center justify-center cosmic-button">
+          <a
+            href="#projects"
+            className="inline-flex items-center justify-center cosmic-button"
+          >
             View My Work
           </a>
 
           <a
             target="_blank"
             rel="noreferrer"
-            href="https://drive.google.com/file/d/1BP-meZByTjP7YQZr7ai4R7cZMtLseVz5/view?usp=sharing"
+            href="https://drive.google.com/file/d/1--A98Yoc0qAWKQdSvM84X912JAf9cAzv/view?usp=sharing"
             className="inline-flex items-center justify-center rounded-full border border-primary/40 px-6 py-2 font-medium transition-all duration-300 hover:scale-105 hover:bg-primary/10"
           >
             My Resume
